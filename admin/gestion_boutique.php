@@ -57,6 +57,8 @@ if (isset($_POST['reference'], $_POST['categorie'], $_POST['titre'], $_POST['des
 
         // Copie l'image dans le dossier ULPOADS
         copy($_FILES['photo']['tmp_name'], $photoDossier);
+    }else{
+        $photoBdd= $_POST['photoActuelle'];
     }
     if (isset($_GET['action']) && $_GET['action'] == 'ajout') {
         $insertProduct = $bdd->prepare("INSERT INTO produit (reference,categorie,titre,description,couleur,taille,public, prix,stock, photo) VALUES (:reference,:categorie,:titre,:description,:couleur,:taille,:public, :prix,:stock, :photo)");
@@ -84,8 +86,11 @@ if (isset($_POST['reference'], $_POST['categorie'], $_POST['titre'], $_POST['des
 
 
     if ($insertProduct->execute()) {
-        $insertMessage = "<p class='col-7 mx-auto p-3 mt-3 bg-success text-white text-center '><strong> $_POST[reference]</strong>  a été enregistrer avec succès</p>";
+        $action = $_GET['action'] == 'ajout' ? 'ajouter' : 'modifier';
+        $insertMessage = "<p class='col-7 mx-auto p-3 mt-3 bg-success text-white text-center '><strong> $_POST[reference]</strong>  a été $action avec succès</p>";
+        $_GET['action'] = 'affichage';
     }
+
 }
 
 
@@ -110,7 +115,7 @@ if (isset($_GET['id'], $_GET['action']) && $_GET['action'] == 'edit') {
     $public = $product['public'];
     $prix  = $product['prix'];
     $stock = $product['stock'];
-    $photoActuelle = $product['photo'];
+    $photo = $product['photo'];
 
 
     //     header("location: ?action=edit&id=$id");
@@ -119,24 +124,6 @@ if (isset($_GET['id'], $_GET['action']) && $_GET['action'] == 'edit') {
     // echo '</pre>';
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 require_once('../inc/inc_back/header.inc.php');
 require_once('../inc/inc_back/nav.inc.php');
@@ -160,6 +147,8 @@ OK 7.Un lien pour Editer et supperimer
     <h1 class="text-center my-5">Affichage des article</h1>
 
     <?php if (isset($deleteMessage)) echo $deleteMessage ?>
+    <?php if (isset($insertMessage )) echo $insertMessage  ?>
+    
 
     <h5 class="mt-3"><span class="bg-success text-white p-2 rounded "><?= $req->rowCount() ?></span>article(s) enregistrés</h5>
 
@@ -208,8 +197,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
 
     <h1 class="text-center my-5"><?= $_GET['action'] == 'ajout' ?  'Ajout article' : 'Modification article' ?></h1>
 
-    <?php if (isset($insertMessage)) echo $insertMessage ?>
-
     <form method="POST" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-6">
             <label for="reference" class="form-label">Référence</label>
@@ -225,16 +212,17 @@ if (isset($_GET['action']) && ($_GET['action'] == 'ajout' || $_GET['action'] == 
         </div>
         <div class="col-md-12">
             <label for="description" class="form-label">Description</label>
-            <textarea type="text" name="description" class="form-control" rows="10" id="description"><?php if (isset($description)) echo $description ?>"</textarea>
+            <textarea type="text" name="description" class="form-control" rows="10" id="description"><?php if (isset($description)) echo $description ?></textarea>
         </div>
 
-        <?php if (isset($photoActuelle)) : ?>
+        <?php if (isset($photo)) : ?>
             <div class="col-md-12 d-inline text-center">
                 <input type="file" name="photo" id="input" style="display:none;">
                 <label for="input">
                     <small class="fst-italic">Photo actuelle de l'article. Vous pouvez uploader une nouvelle photo si vous souhaiter la modifier<br></small>
-                    <img src="<?= $photoActuelle ?>" id="image" width="150px">
+                    <img src="<?= $photo ?>" id="image" width="150px">
                 </label>
+                <input type="hidden" name="photoActuelle" value="<?php if (isset($photo)) echo $photo ?>">
 
             </div>
         <?php else : ?>

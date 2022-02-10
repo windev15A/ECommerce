@@ -5,7 +5,7 @@
                     <ul class="nav flex-column">
                         
                         <li class="nav-item">
-                            <a class="nav-link" href="gestion_boutique.php">
+                            <a class="nav-link" href="gestion_boutique.php?action=affichage">
                                 <i class="bi bi-shop icon-nav"></i>
                            Gestion boutique
                             </a>

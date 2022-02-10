@@ -144,7 +144,7 @@ OK 7.Un lien pour Editer et supperimer
 </div>
 
 <?php if (isset($_GET['action']) && $_GET['action'] == 'affichage') : ?>
-    <h1 class="text-center my-5">Affichage des article</h1>
+    <h1 class="text-center my-5">Affichage des articles</h1>
 
     <?php if (isset($deleteMessage)) echo $deleteMessage ?>
     <?php if (isset($insertMessage )) echo $insertMessage  ?>

@@ -28,10 +28,12 @@ print_r(serialize($produit));
 echo '</pre>';
 if(isset($_POST['qty'])){
 
+
+    $produitSerialize = serialize($produit);
     $reqPanier = $bdd->prepare("INSERT INTO panier (id_membre, produit, qty, status) VALUE (:id_membre, :produit, :qty , :status)");
 
     $reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT);
-    $reqPanier->bindValue(':produit', serialize($produit), PDO::PARAM_INT);
+    $reqPanier->bindValue(':produit', $produitSerialize);
     $reqPanier->bindValue(':qty',$_POST['qty'] , PDO::PARAM_INT);
     $reqPanier->bindValue(':status', false, PDO::PARAM_INT);
     if($reqPanier->execute()){   

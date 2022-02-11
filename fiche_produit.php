@@ -3,17 +3,15 @@
 require_once('inc/init.inc.php');
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
-    
+
 
     $reqProduit = $bdd->prepare("SELECT * FROM produit WHERE id_produit = :id_produit");
     $reqProduit->bindValue(':id_produit', $_GET['id'], PDO::PARAM_INT);
     $reqProduit->execute();
 
-    if($reqProduit->rowCount()){
+    if ($reqProduit->rowCount()) {
         $produit = $reqProduit->fetch(PDO::FETCH_ASSOC);
-        
-    }else 
-    {
+    } else {
         header('location: boutique.php');
     }
 
@@ -21,7 +19,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     // print_r($produit);
     // echo '</pre>';
 
-}else{
+} else {
     header('location: boutique.php');
 }
 
@@ -42,35 +40,49 @@ require_once('inc/inc_front/nav.inc.php');
             <h5 class="card-title text-center fw-bold my-3"><?= $produit['titre'] ?></h5>
             <p class="card-text"><?= $produit['description'] ?></p>
             <p class="card-text fw-bold">Taille : <?= $produit['taille'] ?></p>
-            <p class="card-text fw-bold" >Couleur :<span class="text-white" style="background-color: <?= $produit['couleur'] ?>; padding:3px;"><?= $produit['couleur'] ?></span> </p>
-            <p class="card-text fw-bold"><?= number_format($produit['prix'],2) ?> €</p>
-            <p class="card-text">
+            <div class="d-flex align-items-center">
+                <p class="card-text fw-bold">Couleur :</p>
+                <div style="background-color: <?= $produit['couleur'] ?>; padding:3px; width: 100px; height: 38px"></div>
+            </div>
+            <p class="card-text fw-bold"><?= number_format($produit['prix'], 2) ?> €</p>
+
+
             
-            <?php if($produit['stock'] <= 0): ?>
-                <span class="bg-danger p-2 text-white"> Produit non desponible en stock</span>
-            <?php elseif($produit['stock'] <= 10): ?>    
-                <form action="panier.html" class="row g-3">
-                    <div class="col-12 col-sm-7 col-md-4 col-lg-3 col-xl-3">
-                        <label class="visually-hidden" for="autoSizingSelect">Quantité</label>
-                        <select class="form-select" id="autoSizingSelect" name="quantity">
-                            <option selected>Choisir une quantité...</option>
-                            <?php for($i=1; $i<= $produit['stock']; $i++ ): ?>
-                            <option value="<?=$i?>"><?=$i?></option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                    <div class="col-sm">
-                        <input type="submit" class="btn btn-dark" value="Ajouter au panier">
-                    </div>
-                </form>
-              <?php else: ?>
-                
-                    
-                <?php endif; ?>    
-            </p>
+            <?php if($produit['stock'] < 10 && $produit['stock'] !=0): ?>
+                <p class="card-text fw-bold fst-italic"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Attention ! il ne reste que <?= $produit['stock'] ?> exemplaire(s) en stock</p>
+            <?php elseif ($produit['stock'] > 10): ?>
+                <span class="p-2 text-success"> <i class="bi bi-check-square-fill"></i> En stock</span>
+            <?php endif; ?>
+
+            <?php if($produit['stock'] > 0): ?>
+            <p class="card-text">
+            <form action="panier.html" class="row g-3">
+                <div class="col-12 col-sm-7 col-md-4 col-lg-3 col-xl-3">
+                    <label class="visually-hidden" for="autoSizingSelect">Quantité</label>
+                    <select class="form-select" id="autoSizingSelect" name="quantity">
+                        <option selected>Choisir une quantité...</option>
+                        <?php for ($i = 1; $i <= $produit['stock'] && $i <= 30; $i++) : ?>
+                            <option value="<?= $i ?>"><?= $i ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <input type="submit" class="btn btn-dark" value="Ajouter au panier">
+                </div>
+            </form>
+            <?php else: ?>
+                <p class="card-text fw-bold fst-italic text-danger"><i class="bi bi-slash-circle-fill text-danger"></i> Repteur de stock </p>
+
+            <?php endif; ?>
+
+        </p>
         </div>
     </div>
-    <p class="mt-1"><a href="boutique.php" class="text-dark alert-link"><i class="bi bi-arrow-left-circle-fill"></i> Retour à la boutique</a></p>
+    <div class="d-flex justify-content-between">
+
+        <p class="mt-1"><a href="boutique.php?cat=<?= $produit['categorie'] ?>" class="text-dark alert-link"><i class="bi bi-arrow-left-circle-fill"></i> Retour à la catégorie <?= $produit['categorie'] ?></a></p>
+        <p class="mt-1"><a href="boutique.php" class="text-dark alert-link"> Retour à la boutique <i class="bi bi-arrow-right-circle-fill"></i></a></p>
+    </div>
 </div>
 <?php
 

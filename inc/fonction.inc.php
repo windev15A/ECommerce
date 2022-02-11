@@ -1,5 +1,5 @@
 <?php
-
+require_once('init.inc.php');
 // Function internaute Athentifie
 function connect()
 {
@@ -18,3 +18,5 @@ function adminConnect(){
         return false;
     }
 }
+
+

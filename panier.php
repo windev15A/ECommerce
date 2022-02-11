@@ -2,6 +2,17 @@
 
 require_once('inc/init.inc.php');
 
+// 
+$reqPanier = $bdd->prepare("SELECT * FROM panier WHERE id_membre = :id_membre AND status= :status");
+$reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT );
+$reqPanier->bindValue(':status', false, PDO::PARAM_BOOL );
+$reqPanier->execute();
+$dataPanier = $reqPanier->fetchAll(PDO::FETCH_ASSOC);
+
+    echo '<pre style="margin-left:250px">';
+    print_r($dataPanier);
+    echo '</pre>';
+
 require_once('inc/inc_front/header.inc.php');
 require_once('inc/inc_front/nav.inc.php');
 

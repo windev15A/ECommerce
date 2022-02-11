@@ -23,6 +23,25 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     header('location: boutique.php');
 }
 
+echo '<pre style="margin-left:250px">';
+print_r(serialize($produit));
+echo '</pre>';
+if(isset($_POST['qty'])){
+
+    $reqPanier = $bdd->prepare("INSERT INTO panier (id_membre, produit, qty, status) VALUE (:id_membre, :produit, :qty , :status)");
+
+    $reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT);
+    $reqPanier->bindValue(':produit', serialize($produit), PDO::PARAM_INT);
+    $reqPanier->bindValue(':qty',$_POST['qty'] , PDO::PARAM_INT);
+    $reqPanier->bindValue(':status', false, PDO::PARAM_INT);
+    if($reqPanier->execute()){   
+        $_SESSION['msgPanier'] = 'Produit Ajouter a votre panier';
+        header('location: boutique.php');
+    }
+
+
+}
+
 
 require_once('inc/inc_front/header.inc.php');
 require_once('inc/inc_front/nav.inc.php');
@@ -56,10 +75,10 @@ require_once('inc/inc_front/nav.inc.php');
 
             <?php if($produit['stock'] > 0): ?>
             <p class="card-text">
-            <form action="panier.html" class="row g-3">
+            <form method="POST" class="row g-3">
                 <div class="col-12 col-sm-7 col-md-4 col-lg-3 col-xl-3">
                     <label class="visually-hidden" for="autoSizingSelect">Quantité</label>
-                    <select class="form-select" id="autoSizingSelect" name="quantity">
+                    <select class="form-select" id="autoSizingSelect" name="qty">
                         <option selected>Choisir une quantité...</option>
                         <?php for ($i = 1; $i <= $produit['stock'] && $i <= 30; $i++) : ?>
                             <option value="<?= $i ?>"><?= $i ?></option>

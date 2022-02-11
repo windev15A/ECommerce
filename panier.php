@@ -1,5 +1,7 @@
 <?php
 
+require_once('inc/init.inc.php');
+
 require_once('inc/inc_front/header.inc.php');
 require_once('inc/inc_front/nav.inc.php');
 

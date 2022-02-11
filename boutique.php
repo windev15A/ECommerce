@@ -64,25 +64,19 @@ require_once('inc/inc_front/nav.inc.php');
     </div>
 </div>
 
-
-
 <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-
 <?php foreach($dataprd as $key=>$produit): ?>
-    
     <div class="col">
         <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="<?= $produit['photo'] ?>" class="card-img-top" alt="<?= $produit['titre'] ?>"></a>
+            <a href="fiche_produit.php?id=<?= $produit['id_produit']?>"><img src="<?= $produit['photo'] ?>" class="card-img-top" alt="<?= $produit['titre'] ?>"></a>
             <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique"><?= $produit['titre'] ?></a></h5>
-                <p class="card-text"><?= substr($produit['description'], 0, 50) ?>...</p>
+                <h5 class="card-title text-center"><a href="fiche_produit.php?id=<?= $produit['id_produit']?>" class="alert-link text-dark titre-produit-boutique"><?= $produit['titre'] ?></a></h5>
+                <p class="card-text"><?= substr($produit['description'], 0,200) ?>...</p>
                 <p class="card-text fw-bold"><?= number_format($produit['prix'], 2) ?> €</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
+                <p class="card-text text-center"><a href="fiche_produit.php?id=<?= $produit['id_produit']?>" class="btn btn-outline-dark">En savoir plus</a></p>
             </div>
         </div>
     </div>
-    
-    
     <?php endforeach; ?>
 </div>
 

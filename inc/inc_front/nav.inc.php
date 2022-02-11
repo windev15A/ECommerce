@@ -42,7 +42,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false">BACKOFFICE</a>
                         <ul class="dropdown-menu" aria-labelledby="dropdown07">
-                            <li><a class="dropdown-item" href="admin/gestion_boutique.php">Gestion boutique</a></li>
+                            <li><a class="dropdown-item" href="admin/gestion_boutique.php?action=affichage">Gestion boutique</a></li>
                             <li><a class="dropdown-item" href="admin/gestion_commandes.php">Gestion commande</a></li>
                             <li><a class="dropdown-item" href="admin/gestion_user.php">Gestion users</a></li>
                         </ul>

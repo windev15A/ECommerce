@@ -1,6 +1,36 @@
 <?php
 
 require_once('inc/init.inc.php');
+setlocale(LC_MONETARY, 'fr_FR');
+// Selection articles BDD
+
+
+// Test si y a une categorie entrer dans l URL et qu il n'est pas vide 
+if(isset($_GET['cat']) && !empty($_GET['cat']))
+{
+    $reqcat = $bdd->prepare("SELECT * FROM produit WHERE categorie = :categorie");
+    $reqcat->bindValue(':categorie', $_GET['cat'], PDO::PARAM_STR);
+    $reqcat->execute();
+    if($reqcat->rowCount() ){
+        $dataprd = $reqcat->fetchAll(PDO::FETCH_ASSOC);
+    }
+    // Si la requet ne returne pas de resultat c'est que la cat dans l URL est modifier et que la categorie n'exist pas dans la BDD
+    else
+    {
+        header('location: boutique.php');
+    }
+
+    // echo '<pre style="margin-left:250px">';
+    // print_r($dataprd);
+    // echo '</pre>';
+
+}else
+// si le parametere cat est vide oui y a pas On affiche tous les produits
+{
+    $reqcat = $bdd->query("SELECT * FROM produit");
+    $dataprd = $reqcat->fetchAll(PDO::FETCH_ASSOC);
+}
+
 require_once('inc/inc_front/header.inc.php');
 require_once('inc/inc_front/nav.inc.php');
 
@@ -16,83 +46,44 @@ require_once('inc/inc_front/nav.inc.php');
                 Catégories
             </button>
         </h2>
+
+        <?php
+
+        $catPdos = $bdd->query("SELECT DISTINCT(categorie) FROM produit");
+        ?>
+
         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <p><a href="" class="alert-link text-dark">Tee-shirt</a></p>
-                <p><a href="" class="alert-link text-dark">Pull</a></p>
-                <p><a href="" class="alert-link text-dark">Manteaux</a></p>
+                <?php while ($arrayCat = $catPdos->fetch(PDO::FETCH_ASSOC)) :
+
+                ?>
+                    <p><a href="?cat=<?= $arrayCat['categorie'] ?>" class="alert-link text-dark"><?= $arrayCat['categorie'] ?></a></p>
+                <?php endwhile; ?>
             </div>
         </div>
     </div>
 </div>
 
+
+
 <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+
+<?php foreach($dataprd as $key=>$produit): ?>
+    
     <div class="col">
         <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt1.jpg" class="card-img-top" alt="..."></a>
+            <a href="fiche_produit.html"><img src="<?= $produit['photo'] ?>" class="card-img-top" alt="<?= $produit['titre'] ?>"></a>
             <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 1</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">9.99€</p>
+                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique"><?= $produit['titre'] ?></a></h5>
+                <p class="card-text"><?= substr($produit['description'], 0, 50) ?>...</p>
+                <p class="card-text fw-bold"><?= number_format($produit['prix'], 2) ?> €</p>
                 <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
             </div>
         </div>
     </div>
-    <div class="col">
-        <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt2.jpg" class="card-img-top" alt="..."></a>
-            <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 2</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">10€</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt3.jpg" class="card-img-top" alt="..."></a>
-            <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 3</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">19.99€</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt4.jpg" class="card-img-top" alt="..."></a>
-            <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 4</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">20€</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt5.png" class="card-img-top" alt="..."></a>
-            <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 5</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">15€</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card shadow-sm rounded">
-            <a href="fiche_produit.html"><img src="assets/img/tee-shirt6.jpg" class="card-img-top" alt="..."></a>
-            <div class="card-body">
-                <h5 class="card-title text-center"><a href="fiche_produit.html" class="alert-link text-dark titre-produit-boutique">Tee-shirt 6</a></h5>
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga laborum a quibusdam ratione voluptatem culpa. Quidem, obcaecati. Beatae, et molestiae?</p>
-                <p class="card-text fw-bold">30€</p>
-                <p class="card-text text-center"><a href="fiche_produit.html" class="btn btn-outline-dark">En savoir plus</a></p>
-            </div>
-        </div>
-    </div>
+    
+    
+    <?php endforeach; ?>
 </div>
 
 

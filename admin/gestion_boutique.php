@@ -8,12 +8,11 @@ if (!adminConnect()) {
 // echo '<pre style="margin-left:250px">'; print_r($_POST); echo'</pre>';
 // echo '<pre style="margin-left:250px">'; print_r($_FILES); echo'</pre>';
 
-$req = $bdd->query("SELECT * FROM produit", PDO::FETCH_ASSOC);
+// Fonction pour avoire les données 
+$products = getAll($bdd, 'produit');
 
-$products = $req->fetchAll();
-
-// echo '<pre style="margin-left:250px">';
-// print_r($products[0]['photo']);
+// echo '<pre style="margin-left:300px">';
+// print_r('fffffffffffffffffffffffff'.count($products));
 // echo '</pre>';
 
 if (isset($_GET['id'], $_GET['action']) && $_GET['action'] == 'delete') {
@@ -150,7 +149,7 @@ OK 7.Un lien pour Editer et supperimer
     <?php if (isset($insertMessage )) echo $insertMessage  ?>
     
 
-    <h5 class="mt-3"><span class="bg-success text-white p-2 rounded "><?= $req->rowCount() ?></span>article(s) enregistrés</h5>
+    <h5 class="mt-3"><span class="bg-success text-white p-2 rounded "><?= count($products) ?></span>article(s) enregistrés</h5>
 
     <table class="table">
         <thead class="thead-dark">

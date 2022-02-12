@@ -179,8 +179,8 @@ OK 7.Un lien pour Editer et supperimer
                         <?php endif; ?>
 
                     <?php endforeach; ?>
-                    <td><a href="?action=edit&id=<?= $product['id_produit'] ?>"><i style="font-size: 2rem;" class="bi bi-pencil-square text-primary icon_edit"></i></a></td>
-                    <td><a href="?action=delete&id=<?= $product['id_produit'] ?>"><i style="font-size: 2rem;" class="bi bi-trash text-danger icon_edit"></i></a></td>
+                    <td><a href="?action=edit&id=<?= $product['id_produit'] ?>" ><i style="font-size: 2rem;" class="bi bi-pencil-square text-primary icon_edit"></i></a></td>
+                    <td><a href="?action=delete&id=<?= $product['id_produit'] ?>" onclick="return confirm('Are you sure?')"><i style="font-size: 2rem;" class="bi bi-trash text-danger icon_edit"></i></a></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

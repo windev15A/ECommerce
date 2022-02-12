@@ -1,3 +1,20 @@
+
+<?php 
+
+if(connect()){
+
+    $reqPanier = $bdd->prepare("SELECT * FROM panier WHERE id_membre = :id_membre AND status= :status");
+    $reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT);
+    $reqPanier->bindValue(':status', false, PDO::PARAM_BOOL);
+    $reqPanier->execute();
+    
+}
+
+
+?>
+
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0" aria-label="Eighth navbar example">
     <div class="container">
         <a class="navbar-brand" href="index.php"><img src="assets/img/boutique.gif" alt="logo-gif" class="logo-gif"></a>
@@ -32,7 +49,7 @@
                     <a class="nav-link active" aria-current="page" href="boutique.php">Boutique</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="panier.php">Panier <span class="badge bg-success">3</span></a>
+                    <a class="nav-link active" aria-current="page" href="panier.php">Panier <span class="badge bg-success"><?= connect() ? $reqPanier->rowcount() : 0 ?></span></a>
                 </li>
 
 

@@ -9,9 +9,13 @@ $reqPanier->bindValue(':status', false, PDO::PARAM_BOOL);
 $reqPanier->execute();
 $dataPanier = $reqPanier->fetchAll(PDO::FETCH_ASSOC);
 
+$array = ['bdd'=> $bdd, 'id'=> 1, 'table'=> 'produit'];
+
+getDataById($array);
+
 $total = 0;
 // echo '<pre style="margin-left:250px">';
-// // print_r(unserialize($dataPanier[0]['produit'])['id_produit']);
+// // print_r(unserialize($dataPanier[0]['produit'])['id_produit']); 
 // print_r($dataPanier);
 // echo '</pre>';
 

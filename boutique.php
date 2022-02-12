@@ -30,8 +30,9 @@ if (isset($_GET['cat']) && !empty($_GET['cat'])) {
 } else
 // si le parametere cat est vide oui y a pas On affiche tous les produits
 {
-    $reqcat = $bdd->query("SELECT * FROM produit");
-    $dataprd = $reqcat->fetchAll(PDO::FETCH_ASSOC);
+    // $reqcat = $bdd->query("SELECT * FROM produit");
+    // $dataprd = $reqcat->fetchAll(PDO::FETCH_ASSOC);
+    $dataprd = getAll($bdd, 'produit');
 }
 
 require_once('inc/inc_front/header.inc.php');

@@ -23,10 +23,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     header('location: boutique.php');
 }
 
-echo '<pre style="margin-left:250px">';
-print_r(serialize($produit));
-echo '</pre>';
-if(isset($_POST['qty'])){
+// echo '<pre style="margin-left:250px">';
+// print_r(serialize($produit));
+// echo '</pre>';
+if(isset($_POST['qty']) && $_POST['qty'] > 0){
 
 
     $produitSerialize = serialize($produit);
@@ -42,6 +42,9 @@ if(isset($_POST['qty'])){
     }
 
 
+}else 
+{
+    $qtyMessage = "<p class='col-7 mx-auto p-3 mt-3 bg-danger text-white text-center '>Selectionner une valeur quantité</p>";
 }
 
 
@@ -51,7 +54,6 @@ require_once('inc/inc_front/nav.inc.php');
 ?>
 
 <h1 class="text-center my-5">Détails de l'article</h1>
-
 <div class="row mb-5">
     <div class="bg-white shadow-sm rounded d-flex zone-card-fiche-produit">
 
@@ -80,7 +82,7 @@ require_once('inc/inc_front/nav.inc.php');
             <form method="POST" class="row g-3">
                 <div class="col-12 col-sm-7 col-md-4 col-lg-3 col-xl-3">
                     <label class="visually-hidden" for="autoSizingSelect">Quantité</label>
-                    <select class="form-select" id="autoSizingSelect" name="qty">
+                    <select class="form-select <?php if(isset($qtyMessage)) echo 'border border-danger' ?>" id="autoSizingSelect" name="qty">
                         <option selected>Choisir une quantité...</option>
                         <?php for ($i = 1; $i <= $produit['stock'] && $i <= 30; $i++) : ?>
                             <option value="<?= $i ?>"><?= $i ?></option>

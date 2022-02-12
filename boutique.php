@@ -61,6 +61,7 @@ require_once('inc/inc_front/nav.inc.php');
 
         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body">
+            <p><a href="boutique.php" class="alert-link text-dark">Tous les articles</a></p>
                 <?php while ($arrayCat = $catPdos->fetch(PDO::FETCH_ASSOC)) :
                 ?>
                     <p><a href="?cat=<?= $arrayCat['categorie'] ?>" class="alert-link text-dark"><?= $arrayCat['categorie'] ?></a></p>

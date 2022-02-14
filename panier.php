@@ -1,32 +1,32 @@
 <?php
 
+
 require_once('inc/init.inc.php');
 
-// 
-$reqPanier = $bdd->prepare("SELECT * FROM panier WHERE id_membre = :id_membre AND status= :status");
-$reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT);
-$reqPanier->bindValue(':status', false, PDO::PARAM_BOOL);
-$reqPanier->execute();
-$dataPanier = $reqPanier->fetchAll(PDO::FETCH_ASSOC);
-
-
+echo '<pre style="margin-left:250px">'; 
+print_r($_SESSION['panier']);
+echo '</pre>';
+if(!empty($_SESSION['panier'])) $dataPanier = $_SESSION['panier'];
 
 $total = 0;
-// echo '<pre style="margin-left:250px">';
-// // print_r(unserialize($dataPanier[0]['produit'])['id_produit']); 
-// print_r($dataPanier);
-// echo '</pre>';
+
 
 if (isset($_GET['action'], $_GET['id']) && $_GET['action'] == 'delete') {
-    $delete = $bdd->prepare("DELETE FROM panier WHERE id_panier = :id_panier");
-    $delete->bindValue(':id_panier', $_GET['id'], PDO::PARAM_INT);
-    $delete->execute();
 
+    $people = $_SESSION['panier'];
+    $found_key = array_search($_GET['id'], array_column($people, 'id_panier'));
+    
+    unset($people[$found_key]);
 
-    if ($delete->rowCount() > 0) {
-        $deleteMessage = "<p class='col-7 mx-auto p-3 mt-3 bg-success text-white text-center '>l'article n° <strong> $_GET[id]</strong> a été supprimer avec succès</p>";
-        header('location: panier.php');
+    unset($_SESSION['panier']);
+    foreach($people as $value){
+
+        array_push($_SESSION['panier'], $value);
     }
+    
+    header('location: panier.php');
+    $deleteMessage = "<p class='col-7 mx-auto p-3 mt-3 bg-success text-white text-center '>l'article n° <strong> $_GET[id]</strong> a été supprimer avec succès</p>";
+ 
 }
 
 
@@ -54,7 +54,7 @@ require_once('inc/inc_front/nav.inc.php');
     <?php foreach ($dataPanier as $key => $value) :
         $produit = unserialize($value['produit']);
 
-        $total = $total + $produit['prix'] * $value['qty'];
+        $total += $produit['prix'] * $value['qty'];
 
     ?>
         <div class="container col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 mx-auto d-flex justify-content-center shadow-sm px-0 mb-2">
@@ -77,11 +77,15 @@ require_once('inc/inc_front/nav.inc.php');
 <?php endif; ?>
 
 <div class="container col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 d-flex justify-content-end align-items-center shadow-sm px-0 py-3 bg-white mt-2 mb-3">
-    <h5 class="m-0 px-2 fw-bold">Sous total (<?= $reqPanier->rowCount() ?> articles) : <?= number_format($total, 2) ?> €</h5>
+    <h5 class="m-0 px-2 fw-bold">Sous total (<?= count($_SESSION['panier']) ?? 0 ?> articles) : <?= count($_SESSION['panier']) > 0 ?  number_format($total, 2) : 0 ?> €</h5>
 </div>
 <div class="container col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8 p-0 text-end mb-5">
-    <a href="" class="btn btn-dark">FINALISER LA COMMANDE</a>
+    <a href="paiment.php" class="btn btn-dark">FINALISER LA COMMANDE</a>
 </div>
+
+
+
+
 
 <?php
 

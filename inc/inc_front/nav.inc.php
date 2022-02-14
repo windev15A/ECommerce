@@ -1,13 +1,9 @@
 
 <?php 
 
-if(connect()){
+if(connect() &&  count($_SESSION['panier']) > 0){
 
-    $reqPanier = $bdd->prepare("SELECT * FROM panier WHERE id_membre = :id_membre AND status= :status");
-    $reqPanier->bindValue(':id_membre', $_SESSION['user']['id_membre'], PDO::PARAM_INT);
-    $reqPanier->bindValue(':status', false, PDO::PARAM_BOOL);
-    $reqPanier->execute();
-    
+   $nbarticle = count($_SESSION['panier']);
 }
 
 
@@ -49,7 +45,7 @@ if(connect()){
                     <a class="nav-link active" aria-current="page" href="boutique.php">Boutique</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="panier.php">Panier <span class="badge bg-success"><?= connect() ? $reqPanier->rowcount() : 0 ?></span></a>
+                    <a class="nav-link active" aria-current="page" href="panier.php">Panier <span class="badge bg-success"><?=  $nbarticle ?? 0 ?></span></a>
                 </li>
 
 
